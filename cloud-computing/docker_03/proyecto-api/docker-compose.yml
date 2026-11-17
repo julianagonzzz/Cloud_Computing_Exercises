@@ -1,0 +1,20 @@
+services:
+  api1:
+    build: ./api
+    environment:
+      INSTANCE: api-1
+
+  api2:
+    build: ./api
+    environment:
+      INSTANCE: api-2
+
+  api3:
+    build: ./api
+    environment:
+      INSTANCE: api-3
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "8080:80"

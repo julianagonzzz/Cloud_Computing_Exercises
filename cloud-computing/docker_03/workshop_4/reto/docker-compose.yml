@@ -1,0 +1,18 @@
+# Reto - mismo compose de la parte 4, cambian los scripts de init
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: universidad
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+    ports:
+      - "5432:5432"
+    volumes:
+      # volumen con nombre: los datos sobreviven a un "docker compose down"
+      - postgres_data:/var/lib/postgresql/data
+      # todo lo que este en esta carpeta se ejecuta al iniciar con la carpeta de datos vacia
+      - ./postgres/init:/docker-entrypoint-initdb.d:ro
+
+volumes:
+  postgres_data:

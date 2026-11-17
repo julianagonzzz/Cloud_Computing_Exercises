@@ -1,0 +1,17 @@
+# Parte 5 (reto) - mismo compose, cambia el script de init
+services:
+  mongo:
+    image: mongo:8
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+    ports:
+      - "27017:27017"
+    volumes:
+      # aqui quedan los datos aunque se borre el contenedor
+      - mongo_data:/data/db
+      # los .js y .sh de esta carpeta se ejecutan en el primer arranque
+      - ./mongo/init:/docker-entrypoint-initdb.d:ro
+
+volumes:
+  mongo_data:

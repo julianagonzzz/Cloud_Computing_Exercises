@@ -1,0 +1,9 @@
+# Workshop 2 - Diferencia entre reverse proxy y reverse proxy + balanceo
+
+En la primera versión (`docker-compose.yml` con `nginx/routing.conf`) nginx funciona solo como reverse proxy. Recibe todo por `localhost:8080` y según la ruta decide a qué servicio mandar la petición: `/api/users/` va a `users` y `/api/products/` va a `products`. Cada ruta tiene un único backend, entonces al repetir varias veces `curl http://localhost:8080/api/users/` siempre responde el mismo contenedor (el campo `instance` no cambia). Aquí lo que se ve es routing, no hay reparto de carga. Además los servicios Flask no publican puertos, así que el cliente no sabe en qué puerto ni en qué contenedor están, solo conoce nginx.
+
+En la segunda versión (`docker-compose.lb.yml` con `nginx/lb.conf`) se crean dos instancias de users (`users1` y `users2`) y en nginx se agrega un `upstream users_backend` con las dos. La ruta `/api/users/` ahora apunta al upstream y no a un contenedor fijo. Al repetir las peticiones el `instance` va cambiando entre los dos contenedores en orden (round robin), mientras que `/api/products/` sigue respondiendo siempre desde el mismo, porque products sigue teniendo una sola instancia.
+
+La diferencia es que el reverse proxy decide a qué servicio va una petición y el balanceador decide a cuál copia de ese servicio va. En la segunda versión nginx hace las dos cosas a la vez: primero enruta por la URL y después, dentro de users, reparte entre las instancias. Por eso un reverse proxy puede existir con un solo backend, pero para hablar de balanceo se necesitan por lo menos dos instancias del mismo servicio.
+
+En el reto se agregó `/api/orders/` con dos instancias (`orders1` y `orders2`) y su propio upstream, y se comporta igual que users: las peticiones se alternan entre los dos contenedores.

@@ -1,0 +1,16 @@
+services:
+  web:
+    build: ./nginx
+    ports:
+      - "8080:80"
+    volumes:
+      # Nginx escribe access.log y error.log en la carpeta compartida
+      - ./logs:/var/log/nginx
+
+  bash:
+    build: ./ubuntu
+    volumes:
+      # El contenedor Ubuntu ve los mismos logs en /logs
+      - ./logs:/logs
+    depends_on:
+      - web

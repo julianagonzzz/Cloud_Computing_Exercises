@@ -1,0 +1,6 @@
+===== REPORTE DE access.log =====
+Cantidad total de registros: 7
+Cantidad de errores: 3
+Cantidad de advertencias: 1
+Usuario con más errores: juan
+IP con más errores: 192.168.1.15

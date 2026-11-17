@@ -1,0 +1,30 @@
+services:
+  # tres instancias de la misma api, solo cambia la variable INSTANCE
+  # ninguna publica puertos: solo se llega a ellas a traves de nginx
+  api1:
+    build: ./api
+    environment:
+      INSTANCE: api-1
+
+  api2:
+    build: ./api
+    environment:
+      INSTANCE: api-2
+
+  api3:
+    build: ./api
+    environment:
+      INSTANCE: api-3
+
+  # nginx es el unico punto de entrada (localhost:8080)
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "8080:80"
+    volumes:
+      # reemplaza la config por defecto de nginx por la nuestra
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - api1
+      - api2
+      - api3
